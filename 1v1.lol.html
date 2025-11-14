@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2025 by anonymous (http://jsbin.com/xirowovuwa/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Play Game</title>
+<style>
+body {
+margin: 0;
+background-color: #111;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+font-family: Arial, sans-serif;
+}
+
+#playButton {
+background-color: #007bff;
+color: white;
+padding: 14px 28px;
+font-size: 18px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+
+#playButton:hover {
+background-color: #0056b3;
+}
+
+template {
+display: none;
+}
+</style>
+</head>
+<body>
+<button id="playButton">▶ Play</button>
+
+<!-- Template holds your full Unity+Firebase game HTML -->
+<template id="gameTemplate">
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/n-101-1/1@main/style.css">
+<script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/UnityProgress.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/2.7.js"></script>
+<script>
+var gameInstance;
+window.onload = function () {
+gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/n-101-1/1@main/2.7.json", {
+onProgress: UnityProgress,
+Module: {
+onRuntimeInitialized: function () {
+UnityProgress(gameInstance, "complete");
+},
+},
+});
+};
+</script>
+</head>
+<body style="margin:0">
+<div class="webgl-content">
+<div id="gameContainer" style="width:100vw; height:100vh;"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firebase-app.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firebase-auth.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firebase-firestore.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firebase.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1login.js?v=2"></script>
+<script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firestore.js"></script>
+
+<script>
+initializeFireBase();
+
+function showAds() {
+console.log("show ads");
+}
+function requestNewAd() {
+unityAdFinishedCallback();
+}
+function unityAdFinishedCallback() {
+try {
+if (gameInstance) gameInstance.SendMessage("AdsManager", "OnWebCallback");
+} catch (error) {
+console.log(error);
+}
+}
+</script>
+</body>
+</html>
+</template>
+
+<script>
+document.getElementById("playButton").addEventListener("click", function () {
+const template = document.getElementById("gameTemplate").innerHTML;
+const gameWindow = window.open("", "_blank", "width=1280,height=720");
+
+gameWindow.document.open();
+gameWindow.document.write(template);
+gameWindow.document.close();
+});
+</script>
+</body>
+</html>
